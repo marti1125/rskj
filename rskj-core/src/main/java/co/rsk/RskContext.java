@@ -181,6 +181,7 @@ public class RskContext implements NodeBootstrapper {
     private Ethereum rsk;
     private PeerScoringManager peerScoringManager;
     private NodeBlockProcessor nodeBlockProcessor;
+    private AsyncNodeBlockProcessor asyncNodeBlockProcessor;
     private SyncProcessor syncProcessor;
     private BlockSyncService blockSyncService;
     private SyncPool syncPool;
@@ -516,6 +517,21 @@ public class RskContext implements NodeBootstrapper {
         return nodeBlockProcessor;
     }
 
+    public AsyncNodeBlockProcessor getAsyncNodeBlockProcessor() {
+        if (asyncNodeBlockProcessor == null) {
+            asyncNodeBlockProcessor = new AsyncNodeBlockProcessor(
+                    getNetBlockStore(),
+                    getBlockchain(),
+                    getBlockNodeInformation(),
+                    getBlockSyncService(),
+                    getSyncConfiguration(),
+                    null
+            );
+        }
+
+        return asyncNodeBlockProcessor;
+    }
+
     public RskSystemProperties getRskSystemProperties() {
         if (rskSystemProperties == null) {
             rskSystemProperties = buildRskSystemProperties();
@@ -842,6 +858,10 @@ public class RskContext implements NodeBootstrapper {
                 getTrieStore(),
                 getBlockStore(),
                 getReceiptStore()));
+        if (getRskSystemProperties().fastBlockPropagation()) {
+            internalServices.add(getAsyncNodeBlockProcessor());
+        }
+
         GarbageCollectorConfig gcConfig = getRskSystemProperties().garbageCollectorConfig();
         if (gcConfig.enabled()) {
             internalServices.add(new GarbageCollector(
@@ -1558,9 +1578,14 @@ public class RskContext implements NodeBootstrapper {
 
     private NodeMessageHandler getNodeMessageHandler() {
         if (nodeMessageHandler == null) {
+            RskSystemProperties rskSystemProperties = getRskSystemProperties();
+            BlockProcessor blockProcessor = rskSystemProperties.fastBlockPropagation()
+                    ? getAsyncNodeBlockProcessor()
+                    : getNodeBlockProcessor();
+
             nodeMessageHandler = new NodeMessageHandler(
-                    getRskSystemProperties(),
-                    getNodeBlockProcessor(),
+                    rskSystemProperties,
+                    blockProcessor,
                     getSyncProcessor(),
                     getChannelManager(),
                     getTransactionGateway(),

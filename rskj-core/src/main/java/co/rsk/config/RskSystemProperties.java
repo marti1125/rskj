@@ -342,5 +342,11 @@ public class RskSystemProperties extends SystemProperties {
         return configFromFiles.getBytes("vm.executionStackSize");
     }
 
-    public String cryptoLibrary() { return configFromFiles.getString("crypto.library");}
+    public String cryptoLibrary() {
+        return configFromFiles.getString("crypto.library");
+    }
+
+    public boolean fastBlockPropagation() {
+        return configFromFiles.getBoolean("peer.fastBlockPropagation");
+    }
 }
