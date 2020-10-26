@@ -91,7 +91,6 @@ dependencies {
     compile "co.rsk.bitcoinj:bitcoinj-thin:${bitcoinjVersion}"
     compile 'com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.1'
     compile 'co.rsk:native:1.0.1'
-    compile 'org.web3j:core:4.5.9'
 
     runtime "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
     runtime "ch.qos.logback:logback-classic:${logbackVersion}"
@@ -126,7 +125,7 @@ dependencyVerification {
         'com.lambdaworks:scrypt:9a82d218099fb14c10c0e86e7eefeebd8c104de920acdc47b8b4b7a686fb73b4',
         'com.madgag.spongycastle:core:07a401edbe26e1028e2324754557b741cc57306008df7b71a9e12ec32d65be8f',
         'com.squareup.okhttp:okhttp:b4c943138fcef2bcc9d2006b2250c4aabbedeafc5947ed7c0af7fd103ceb2707',
-        'com.squareup.okio:okio:734269c3ebc5090e3b23566db558f421f0b4027277c79ad5d176b8ec168bb850',
+        'com.squareup.okio:okio:114bdc1f47338a68bcbc95abf2f5cdc72beeec91812f2fcd7b521c1937876266',
         'com.typesafe:config:b5f1d6071f1548d05be82f59f9039c7d37a1787bd8e3c677e31ee275af4a4621',
         'commons-codec:commons-codec:4241dfa94e711d435f29a4604a3e2de5c4aa3c165e23bd066be6fc1fc4309569',
         'commons-io:commons-io:a10418348d234968600ccb1d988efcbbd08716e1d96936ccc1880e7d22513474',
