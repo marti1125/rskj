@@ -48,8 +48,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Map;
 
-import static org.ethereum.rpc.TypeConverter.stringHexToBigInteger;
-import static org.ethereum.rpc.TypeConverter.toJsonHex;
+import static org.ethereum.rpc.TypeConverter.*;
 import static org.ethereum.rpc.exception.RskJsonRpcRequestException.invalidParamError;
 
 // TODO add all RPC methods
@@ -126,7 +125,7 @@ public class EthModule
                 throw RskJsonRpcRequestException.transactionRevertedExecutionError();
             }
 
-            return s = toJsonHex(res.getHReturn());
+            return s = toUnformattedJsonHex(res.getHReturn());
         } finally {
             LOGGER.debug("eth_call(): {}", s);
         }
