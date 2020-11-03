@@ -74,6 +74,7 @@ import co.rsk.rpc.modules.txpool.TxPoolModuleImpl;
 import co.rsk.rpc.netty.*;
 import co.rsk.scoring.PeerScoring;
 import co.rsk.scoring.PeerScoringManager;
+import co.rsk.scoring.PeerScoringReporterService;
 import co.rsk.scoring.PunishmentParameters;
 import co.rsk.trie.MultiTrieStore;
 import co.rsk.trie.TrieConverter;
@@ -237,6 +238,7 @@ public class RskContext implements NodeBootstrapper {
     private BootstrapImporter bootstrapImporter;
     private ReceivedTxSignatureCache receivedTxSignatureCache;
     private BlockTxSignatureCache blockTxSignatureCache;
+    private PeerScoringReporterService peerScoringReporterService;
 
     public RskContext(String[] args) {
         this(new CliArgs.Parser<>(
@@ -852,6 +854,9 @@ public class RskContext implements NodeBootstrapper {
                     getBlockStore(),
                     getRepositoryLocator()
             ));
+        }
+        if(getRskSystemProperties().isPeerScoringStatsReportEnabled()) {
+            internalServices.add(getPeerScoringReporterService());
         }
         return Collections.unmodifiableList(internalServices);
     }
@@ -1679,5 +1684,13 @@ public class RskContext implements NodeBootstrapper {
         KeyValueDataSource blocksDB = LevelDbDataSource.makeDataSource(Paths.get(databaseDir, "blocks"));
 
         return new IndexedBlockStore(getBlockFactory(), blocksDB, new MapDBBlocksIndex(indexDB));
+    }
+
+    public PeerScoringReporterService getPeerScoringReporterService() {
+        if(peerScoringReporterService == null) {
+            this.peerScoringReporterService = new PeerScoringReporterService(getRskSystemProperties().getPeerScoringSummaryTime(), getPeerScoringManager());
+        }
+
+        return peerScoringReporterService;
     }
 }
